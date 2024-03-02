@@ -1,0 +1,14 @@
+{
+    "p": {
+        "secretname": "p",
+        "destinationRepositoryName": "repo-01",
+        "destinationRepositoryOwner": "targetorganization-a",
+        "destinationPersonalAccessTokenName":"the_pat_a"
+    },
+    "q": {
+        "secretname": "q",
+        "destinationRepositoryName": "repo-02",
+        "destinationRepositoryOwner": "targetorganization-b",
+        "destinationPersonalAccessTokenName":"the_pat_b"
+    }
+}
