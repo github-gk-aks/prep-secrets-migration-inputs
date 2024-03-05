@@ -1,0 +1,20 @@
+{
+    "SECRET_1": {
+        "secretname": "SECRET_1",
+        "destinationRepositoryName": "fifthgithubrepo",
+        "destinationRepositoryOwner": "github-CONFIDENTIAL",
+        "destinationPersonalAccessTokenName": "CONFIDENTIAL_TOKEN"
+    },
+    "SECRET_2": {
+        "secretname": "SECRET_2",
+        "destinationRepositoryName": "fifthgithubrepo",
+        "destinationRepositoryOwner": "github-CONFIDENTIAL",
+        "destinationPersonalAccessTokenName": "CONFIDENTIAL_TOKEN"
+    },
+    "SECRET_3": {
+        "secretname": "SECRET_3",
+        "destinationRepositoryName": "fifthgithubrepo",
+        "destinationRepositoryOwner": "github-CONFIDENTIAL",
+        "destinationPersonalAccessTokenName": "CONFIDENTIAL_TOKEN"
+    }
+}
