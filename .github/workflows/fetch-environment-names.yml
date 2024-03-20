@@ -203,6 +203,8 @@ jobs:
             repository=$(echo "$line" | awk '{print $1}')
             environment=$(echo "$line" | awk '{print $2}')
             secrets=$(echo "$line" | awk '{print $3}')
+            echo "Repository: $repository, Environment: $environment, Secrets: $secrets"
+
             
             # Check if the environment or secrets are "No-Secrets" or "No-Environment"
             if [ "$environment" != "No-Environment" ] && [ "$secrets" != "No-Secrets" ]; then
