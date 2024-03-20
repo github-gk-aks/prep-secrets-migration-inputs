@@ -199,7 +199,7 @@ jobs:
 
       - name: Process environment names and fetch secrets
         run: |
-          while IFS= read -r line; do
+          while IFS=';' read -r line; do
             repository=$(echo "$line" | awk '{print $1}')
             environment=$(echo "$line" | awk '{print $2}')
             secrets=$(echo "$line" | awk '{print $3}')
