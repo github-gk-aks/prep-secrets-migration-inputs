@@ -262,7 +262,7 @@ jobs:
 
 
   convert-to-excel:
-    needs: fetch-environments-secrets
+    needs: filter-environment-secrets-file
     runs-on: ubuntu-latest
     steps:
       - name: Checkout central repository
