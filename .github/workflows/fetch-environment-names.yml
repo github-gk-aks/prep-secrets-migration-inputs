@@ -184,6 +184,8 @@ jobs:
   filter-environment-secrets-file:
     needs: fetch-environments-secrets
     runs-on: ubuntu-latest
+    env:
+      DEST_PAT_TOKEN: Dummy
     steps:
       - name: Checkout central repository
         uses: actions/checkout@v4
@@ -199,17 +201,15 @@ jobs:
 
       - name: Process environment names and fetch secrets
         run: |
-          while IFS=';' read -r line; do
+          while IFS=';' read -r repository environment secrets dummy; do
             repository=$(echo "$line" | awk '{print $1}')
             environment=$(echo "$line" | awk '{print $2}')
             secrets=$(echo "$line" | awk '{print $3}')
-            echo "Repository: $repository, Environment: $environment, Secrets: $secrets"
-
             
             # Check if the environment or secrets are "No-Secrets" or "No-Environment"
             if [ "$environment" != "No-Environment" ] && [ "$secrets" != "No-Secrets" ]; then
               # Output the record to the output file
-              echo "$line" >> "${{ github.workspace }}/source-repo/output/get-environment-secrets-filtered.txt"
+              echo "$repository;$environment;$secrets;${{ env.DEST_PAT_TOKEN }}" >> "${{ github.workspace }}/source-repo/output/get-environment-secrets-filtered.txt"
             fi
           done < ./source-repo/output/get-environment-secrets.txt
           
