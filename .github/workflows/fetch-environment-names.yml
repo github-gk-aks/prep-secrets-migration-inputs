@@ -483,11 +483,7 @@ jobs:
               secret_name = row['Secret']
               repository_id = row['Destination Repository ID']
               pat_name = row['Destination PAT']
-              
-              # Create a dictionary for each environment
-              if env_name not in json_data:
-                  json_data[env_name] = {}
-              
+                           
               # Add secret details to the environment dictionary
               row_data = {
                   "secretname": secret_name,
@@ -497,7 +493,7 @@ jobs:
               }
               
               json_data[secret_name] = row_data
-              
+
           # Save as JSON file
           with open('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.json', 'w') as json_file:
               json.dump(json_data, json_file, indent=4)
