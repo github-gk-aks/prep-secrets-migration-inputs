@@ -473,10 +473,6 @@ jobs:
           import pandas as pd
           import json
 
-          python3 <<EOF
-          import pandas as pd
-          import json
-
           # Read the data from transformed-environment-secrets.xlsx
           data = pd.read_excel('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.xlsx')
 
