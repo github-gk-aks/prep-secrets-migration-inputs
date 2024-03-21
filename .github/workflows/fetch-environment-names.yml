@@ -392,6 +392,7 @@ jobs:
               if not matching_row.empty:
                   # Update the Destination Repository ID
                   data.at[index, 'Destination Repository ID'] = matching_row.iloc[0]['Destination Repository ID']
+                  data.at[index, 'Destination PAT'] = matching_row.iloc[0]['Destination PAT']
 
           # Save as Excel file
           data.to_excel('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.xlsx', index=False)
@@ -426,6 +427,104 @@ jobs:
         env:
             GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
   
+      # - name: Commit Changes
+      #   run: |
+      #       cd ${{ github.workspace }}/source-repo/output
+      #       if [ -n "$(git status --porcelain)" ]; then
+      #       git pull origin
+      #       git add .
+      #       git commit  -m "Add get-environment-secret.xlsx - $(date +"%Y-%m-%d %H:%M:%S")" 
+      #       git push
+      #       else
+      #       echo "No changes to commit."
+      #       fi
+      #       cd ${{ github.workspace }}
+      #   env:
+      #       GPG_KEY_PASSPHRASE: ${{ secrets.PASSPHRASE }}
+      #       working-directory: ${{ github.workspace }}
+
+  convert-to-json:
+    needs: transform-excel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout central repository
+        uses: actions/checkout@v4
+        with:
+            token: ${{ secrets.GK_PAT }}
+            path: ./source-repo
+
+      - name: Install python
+        uses: actions/setup-python@v2
+        with:
+            python-version: '3.x'
+        
+      - name: Install pandas
+        run: pip install pandas openpyxl
+    
+      - name: Download transformed-environment-secrets.xlsx as artifact
+        uses: actions/download-artifact@v4
+        with:
+            name: transformed-environment-secrets.xlsx
+            path: ./source-repo/output  # Download to the current directory
+
+      - name: Perform data transformation
+        run: |
+          python3 <<EOF
+          import pandas as pd
+
+          # Read the data from transformed-environment-secrets.xlsx
+          data = pd.read_excel('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.xlsx')
+
+          # Convert to JSON
+          json_data = {}
+          for index, row in data.iterrows():
+              env_name = row['Environment']
+              repository_id = row['Destination Repository ID']
+              secret_name = row['Secret']
+              pat_name = row['Destination PAT']
+              if env_name not in json_data:
+                  json_data[env_name] = []
+              json_data[env_name].append({
+                  "secretname": secret_name,
+                  "destinationEnvironmentName": env_name,
+                  "destinationRepositoryId": repository_id,
+                  "destinationPersonalAccessTokenName": pat_name
+              })
+
+          # Save as JSON file
+          with open('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.json', 'w') as json_file:
+              json.dump(json_data, json_file, indent=4)
+          EOF
+      
+      - name: Upload transformed-environment-secrets.json as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: transformed-environment-secrets.json
+          path: ./source-repo/output
+            
+      - name: Import GPG key
+        run: |
+            echo "${GPG_PRIVATE_KEY}" | gpg --batch --import
+        env: 
+            GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Add the custom gpg signing program that passes the passphrase to the gpg CLI
+        run: |
+            rm -rf /tmp/gpg.sh
+            echo '#!/bin/bash' >> /tmp/gpg.sh
+            echo 'gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE $@' >> /tmp/gpg.sh
+            chmod +x /tmp/gpg.sh
+
+      - name: Setup git
+        run: |
+            git config --global user.email ${{ secrets.GIT_COMMITTER_EMAIL }}
+            git config --global user.name ${{ secrets.GIT_COMMITTER_NAME }}
+            git config --global commit.gpgsign true
+            git config --global user.signingkey $GPG_KEY_ID
+            git config --global gpg.program /tmp/gpg.sh
+        env:
+            GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+    
       - name: Commit Changes
         run: |
             cd ${{ github.workspace }}/source-repo/output
