@@ -489,13 +489,15 @@ jobs:
                   json_data[env_name] = {}
               
               # Add secret details to the environment dictionary
-              json_data[env_name][secret_name] = {
+              row_data = {
                   "secretname": secret_name,
                   "destinationEnvironmentName": env_name,
                   "destinationRepositoryId": str(repository_id),  # Convert to string to maintain consistency
                   "destinationPersonalAccessTokenName": pat_name
               }
-
+              
+              json_data[secret_name] = row_data
+              
           # Save as JSON file
           with open('${{ github.workspace }}/source-repo/output/transformed-environment-secrets.json', 'w') as json_file:
               json.dump(json_data, json_file, indent=4)
