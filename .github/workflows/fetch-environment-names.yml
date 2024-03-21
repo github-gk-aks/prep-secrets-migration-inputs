@@ -388,7 +388,7 @@ jobs:
           # Assuming FileA Repository Name matches with FileB Source Repository Name
           for index, row in data.iterrows():
               repository_name = row['Repository']
-              matching_row = digital_to_emu_df[digital_to_emu_df['Source Repository Name'] == repository_name]
+              matching_row = digital_to_emu_df[digital_to_emu_df['Source Repo Name'] == repository_name]
               if not matching_row.empty:
                   # Update the Destination Repository ID
                   data.at[index, 'Destination Repository ID'] = matching_row.iloc[0]['Destination Repository ID']
