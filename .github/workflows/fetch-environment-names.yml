@@ -574,7 +574,12 @@ jobs:
     
             # Iterate through the data and generate repository-specific JSON files
             for secret_name, secret_data in data.items():
-                repo_name = secret_data['repository']
+              repository_full_name = secret_data['repository']
+              _, repo_name = repository_full_name.split('/')
+
+                # Remove the 'repository' key from the data
+                del secret_data['repository']
+                
                 specific_json_file = os.path.join('${{ github.workspace }}/source-repo/output', f'{repo_name}-env-spec.json')
                 if not os.path.exists(specific_json_file):
                     with open(specific_json_file, 'w') as specific_json:
