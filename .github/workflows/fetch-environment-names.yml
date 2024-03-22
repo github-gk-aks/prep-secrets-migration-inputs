@@ -577,20 +577,20 @@ jobs:
               repository_full_name = secret_data['repository']
               _, repo_name = repository_full_name.split('/')
 
-                # Remove the 'repository' key from the data
-                del secret_data['repository']
-                
-                specific_json_file = os.path.join('${{ github.workspace }}/source-repo/output', f'{repo_name}-env-spec.json')
-                if not os.path.exists(specific_json_file):
-                    with open(specific_json_file, 'w') as specific_json:
-                        specific_json.write(json.dumps({secret_name: secret_data}, indent=4))
-                else:
-                    with open(specific_json_file, 'r+') as specific_json:
-                        specific_data = json.load(specific_json)
-                        specific_data[secret_name] = secret_data
-                        specific_json.seek(0)
-                        specific_json.truncate()
-                        specific_json.write(json.dumps(specific_data, indent=4))
+              # Remove the 'repository' key from the data
+              del secret_data['repository']
+              
+              specific_json_file = os.path.join('${{ github.workspace }}/source-repo/output', f'{repo_name}-env-spec.json')
+              if not os.path.exists(specific_json_file):
+                  with open(specific_json_file, 'w') as specific_json:
+                      specific_json.write(json.dumps({secret_name: secret_data}, indent=4))
+              else:
+                  with open(specific_json_file, 'r+') as specific_json:
+                      specific_data = json.load(specific_json)
+                      specific_data[secret_name] = secret_data
+                      specific_json.seek(0)
+                      specific_json.truncate()
+                      specific_json.write(json.dumps(specific_data, indent=4))
             EOF
     
       - name: Upload repository-specific JSON files as artifacts
