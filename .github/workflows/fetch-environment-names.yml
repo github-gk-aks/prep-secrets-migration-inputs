@@ -479,6 +479,7 @@ jobs:
           # Convert to JSON
           json_data = {}
           for index, row in data.iterrows():
+              repo_name = row['Repository']
               env_name = row['Environment']
               secret_name = row['Secret']
               repository_id = row['Destination Repository ID']
@@ -486,6 +487,7 @@ jobs:
                            
               # Add secret details to the environment dictionary
               row_data = {
+                  "repository": repo_name,
                   "secretname": secret_name,
                   "destinationEnvironmentName": env_name,
                   "destinationRepositoryId": str(repository_id),  # Convert to string to maintain consistency
