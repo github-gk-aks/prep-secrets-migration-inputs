@@ -1,0 +1,26 @@
+{
+    "UAT_ENV_1": {
+        "secretname": "UAT_ENV_1",
+        "destinationEnvironmentName": "uat",
+        "destinationRepositoryId": "764353440",
+        "destinationPersonalAccessTokenName": "SHARED_TOKEN"
+    },
+    "UAT_ENV_2": {
+        "secretname": "UAT_ENV_2",
+        "destinationEnvironmentName": "uat",
+        "destinationRepositoryId": "764353440",
+        "destinationPersonalAccessTokenName": "SHARED_TOKEN"
+    },
+    "UAT_ENV_3": {
+        "secretname": "UAT_ENV_3",
+        "destinationEnvironmentName": "uat",
+        "destinationRepositoryId": "764353440",
+        "destinationPersonalAccessTokenName": "SHARED_TOKEN"
+    },
+    "UAT_ENV_4": {
+        "secretname": "UAT_ENV_4",
+        "destinationEnvironmentName": "uat",
+        "destinationRepositoryId": "764353440",
+        "destinationPersonalAccessTokenName": "SHARED_TOKEN"
+    }
+}
